@@ -1,0 +1,50 @@
+import tkinter as tk
+
+class LoginApp:
+    def __init__(self, window):
+        self.window = window
+        window.title("Login")
+
+        # Create the login frame
+        self.login_frame = tk.Frame(window)
+        self.login_frame.pack()
+
+        # Create the login form
+        self.login_label = tk.Label(self.login_frame, text="Username:")
+        self.login_entry = tk.Entry(self.login_frame)
+        self.password_label = tk.Label(self.login_frame, text="Password:")
+        self.password_entry = tk.Entry(self.login_frame, show="*")
+        self.login_button = tk.Button(self.login_frame, text="Login", command=self.check_login)
+
+        # Place the login widgets in a grid
+        self.login_label.grid(row=0, column=0)
+        self.login_entry.grid(row=0, column=1)
+        self.password_label.grid(row=1, column=0)
+        self.password_entry.grid(row=1, column=1)
+        self.login_button.grid(row=2, column=0, columnspan=2)
+
+    def check_login(self):
+        # Check the login information
+        username = self.login_entry.get()
+        password = self.password_entry.get()
+
+        # Check if the username and password match the credentials in the text file
+        with open("credentials.txt", "r") as f:
+            lines = f.read().splitlines()
+
+        for line in lines:
+            if line == f"{username},{password}":
+                # If the login is successful, import and run the mainmenu window
+                import mainmenu
+                mainmenu.run()
+                # close the current window
+                self.window.destroy()
+                return
+
+        # If the login is not successful, show an error message
+        tk.Label(self.login_frame, text="Incorrect username or password. Try again.").grid(row=3, column=0, columnspan=2)
+
+# Create the window and start the app
+window = tk.Tk()
+app = LoginApp(window)
+window.mainloop()
